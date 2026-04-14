@@ -32,7 +32,7 @@ To improve this, a dedicated caching layer for inline scripts is being developed
 
 ## Proposed Solution
 
-We propose adding a `cache-hints` attribute to the `<script>` tag.
+We propose adding a `cache-hints` attribute to the `<script>` tag. This attribute only applies to inline scripts and has no effect on resource scripts (scripts with a `src` attribute).
 
 ### Attribute Values
 
@@ -81,6 +81,10 @@ interface HTMLScriptElement : HTMLElement {
   var data_url = "data:image/...";
   insertImage(data_url);
 </script>
+
+<!-- These attributes have no effect on resource scripts -->
+<script cache-hints="eager" src="https://example.com/script.js"></script>
+<script cache-hints="never" src="https://example.com/script.js"></script>
 ```
 
 ## Alternatives Considered
