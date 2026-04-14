@@ -2,7 +2,7 @@
 Title: Inline Script Cache Hint
 Shortname: inline-script-cache-hint
 Level: None
-Status: UD
+Status: w3c/UD
 Repository: explainers-by-googlers/inline-script-cache-hint
 URL: https://explainers-by-googlers.github.io/inline-script-cache-hint
 Editor: Takashi Nakayama, Google https://google.com, tnak@chromium.org
