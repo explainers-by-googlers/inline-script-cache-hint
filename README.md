@@ -37,7 +37,7 @@ We propose adding a `cache-hints` attribute to the `<script>` tag. This attribut
 ### Attribute Values
 
 - `eager`: Signals to the browser that this script is a good candidate for caching (e.g., it's large, static, and used across pages). The specific caching behavior and strategy are left to the browser's discretion.
-- `default`: Signals that the browser should use its default caching strategy for inline scripts. This is the same as not having the attribute.
+- `default`: Signals that the browser should use its default caching strategy for inline scripts: automatically determines which inline scripts to cache.
 - `never`: Signals that the browser **must not** cache this script. This is a strict instruction to prevent caching of dynamic or one-off scripts.
 
 ### WebIDL
@@ -80,9 +80,9 @@ partial interface HTMLScriptElement : HTMLElement {
 
 ## Alternatives Considered
 
-### Automatic Detection by Browser
+### Fully Automatic Detection by Browser without Hints
 
-An alternative is for the browser to automatically determine which inline scripts to cache (e.g., based on size, execution frequency, or script complexity) without developer hints.
+By default, browsers already can automatically determine which inline scripts to cache based on heuristics like size, complexity, execution count, etc. (For example, Chromium implements inline script caching for large inline scripts that are executed multiple times.)
 
 However, the HTML specification guarantees that inline script compilation and execution are synchronous. This strict timing requirement makes it difficult for the browser to run advanced, potentially time-consuming analysis algorithms to decide on caching before execution without regressing performance. Developer hints via `cache-hints` provide a low-overhead way to guide the browser.
 
@@ -92,10 +92,10 @@ Browsers must ensure that caching of inline scripts does not expose cross-origin
 
 ## FAQ
 
-### Why `cache-hint` is not applicable for resource scripts?
+### Why `cache-hint` is Not Applicable for Resource Scripts?
 
 Caches for resource scripts are already well-supported via HTTP caches and other existing mechanisms. Adding cache hints for resource scripts would add unnecessary complexity to the platform.
 
-### How wide is the cache scope?
+### How Wide is the Cache Scope?
 
 It depends on browser implementation, including whether cross-document within the same-origin is supported. However, browsers must not cache inline scripts cross-origins. As an example, the current implementation in Chromium isolates cache per top-level site and frame origin, same as HTTP cache partitioning.
