@@ -37,32 +37,16 @@ We propose adding a `cache-hints` attribute to the `<script>` tag. This attribut
 ### Attribute Values
 
 - `eager`: Signals to the browser that this script is a good candidate for caching (e.g., it's large, static, and used across pages). The specific caching behavior and strategy are left to the browser's discretion.
-- `never`: Signals that the browser **must not** cache this script. In contrast to `eager`, this is a strict instruction to prevent caching of dynamic or one-off scripts.
+- `default`: Signals that the browser should use its default caching strategy for inline scripts. This is the same as not having the attribute.
+- `never`: Signals that the browser **must not** cache this script. This is a strict instruction to prevent caching of dynamic or one-off scripts.
 
 ### WebIDL
 
+`HTMLScriptElement` is extended with `cacheHints` attribute.
+
 ```idl
-[Exposed=Window]
-interface HTMLScriptElement : HTMLElement {
-  [HTMLConstructor] constructor();
-
-  [CEReactions, Reflect] attribute DOMString type;
-  [CEReactions, ReflectURL] attribute USVString src;
-  [CEReactions, Reflect] attribute boolean noModule;
-  [CEReactions] attribute boolean async;
-  [CEReactions, Reflect] attribute boolean defer;
-  [SameObject, PutForwards=value, Reflect] readonly attribute DOMTokenList blocking;
-  [CEReactions] attribute DOMString? crossOrigin;
-  [CEReactions] attribute DOMString referrerPolicy;
-  [CEReactions, Reflect] attribute DOMString integrity;
-  [CEReactions] attribute DOMString fetchPriority;
-+ [CEReactions, Reflect] attribute DOMString cacheHints;  // New attribute
-
-  [CEReactions] attribute DOMString text;
-
-  static boolean supports(DOMString type);
-
-  // also has obsolete members
+partial interface HTMLScriptElement : HTMLElement {
+  [CEReactions, Reflect] attribute DOMString cacheHints;
 };
 ```
 
@@ -73,6 +57,13 @@ interface HTMLScriptElement : HTMLElement {
 <script cache-hints="eager">
   function commonLargeFunction() {
     /* hundreds of lines */
+  }
+</script>
+
+<!-- Same as no attribute -->
+<script cache-hints="default">
+  function anotherFunction() {
+    /* some lines */
   }
 </script>
 
@@ -97,4 +88,14 @@ However, the HTML specification guarantees that inline script compilation and ex
 
 ## Security and Privacy Considerations
 
-This feature does not expose new cross-origin data, as it only applies to scripts already embedded in the document. The cache keys will be properly partitioned to prevent cross-site tracking, consistent with standard browser caching policies.
+Browsers must ensure that caching of inline scripts does not expose cross-origin data based on the embedding document's same-origin policy. Detailed cache management strategies are up to individual browser vendors.
+
+## FAQ
+
+### Why `cache-hint` is not applicable for resource scripts?
+
+Caches for resource scripts are already well-supported via HTTP caches and other existing mechanisms. Adding cache hints for resource scripts would add unnecessary complexity to the platform.
+
+### How wide is the cache scope?
+
+It depends on browser implementation, including whether cross-document within the same-origin is supported. However, browsers must not cache inline scripts cross-origins. As an example, the current implementation in Chromium isolates cache per top-level site and frame origin, same as HTTP cache partitioning.
