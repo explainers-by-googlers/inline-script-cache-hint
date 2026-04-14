@@ -1,185 +1,96 @@
-# Explainer for the TODO API
+# Explainer for `cache-hints` on Inline Scripts
 
-**Instructions for the explainer author: Search for "todo" in this repository and update all the
-instances as appropriate. For the instances in `index.bs`, update the repository name, but you can
-leave the rest until you start the specification. Then delete the TODOs and this block of text.**
-
-This proposal is an early design sketch by [TODO: team] to describe the problem below and solicit
-feedback on the proposed solution. It has not been approved to ship in Chrome.
-
-TODO: Fill in the whole explainer template below using https://tag.w3.org/explainers/ as a
-reference. Look for [brackets].
+This proposal introduces a `cache-hints` attribute for HTML `<script>` tags, specifically targeting inline scripts. It allows developers to provide hints to the browser about whether an inline script should be cached.
 
 ## Proponents
 
-- [Proponent team 1]
-- [Proponent team 2]
-- [etc.]
+- [Takashi Nakayama](https://github.com/azaika) (tnak@chromium.org)
 
 ## Participate
-- https://github.com/explainers-by-googlers/[your-repository-name]/issues
-- [Discussion forum]
-
-## Table of Contents [if the explainer is longer than one printed page]
-
-<!-- Update this table of contents by running `npx doctoc README.md` -->
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-- [Introduction](#introduction)
-- [Goals](#goals)
-- [Non-goals](#non-goals)
-- [User research](#user-research)
-- [Use cases](#use-cases)
-  - [Use case 1](#use-case-1)
-  - [Use case 2](#use-case-2)
-- [[Potential Solution]](#potential-solution)
-  - [How this solution would solve the use cases](#how-this-solution-would-solve-the-use-cases)
-    - [Use case 1](#use-case-1-1)
-    - [Use case 2](#use-case-2-1)
-- [Detailed design discussion](#detailed-design-discussion)
-  - [[Tricky design choice #1]](#tricky-design-choice-1)
-  - [[Tricky design choice 2]](#tricky-design-choice-2)
-- [Considered alternatives](#considered-alternatives)
-  - [[Alternative 1]](#alternative-1)
-  - [[Alternative 2]](#alternative-2)
-- [Security and Privacy Considerations](#security-and-privacy-considerations)
-- [Stakeholder Feedback / Opposition](#stakeholder-feedback--opposition)
-- [References & acknowledgements](#references--acknowledgements)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+- https://github.com/explainers-by-googlers/inline-script-cache-hint/issues
 
 ## Introduction
 
-[The "executive summary" or "abstract".
-Explain in a few sentences what the goals of the project are,
-and a brief overview of how the solution works.
-This should be no more than 1-2 paragraphs.]
+Inline scripts are widely used but traditionally do not benefit from the browser's script cache because they lack a unique URL. This means large inline scripts must be parsed and compiled every time a page loads, which can negatively impact loading performance.
+
+Chromium is implementing a new caching layer called **Inline Script Cache** to address this. To make this caching more effective and give developers control, we propose the `cache-hints` attribute.
+
+## Background
+
+The compilation time of inline scripts can have a non-negligible impact on loading performance, especially on low-end devices or with large scripts. While external scripts benefit from HTTP caching and code caching keyed by URL, inline scripts are typically re-compiled on every execution.
+
+To improve this, a dedicated caching layer for inline scripts is being developed in Chromium. For more technical details on the underlying mechanism, please refer to the [Inline Script Cache Design Doc](https://docs.google.com/document/d/1pVFb79e5vkKJI7nZ15BXZFbNji_mB2Y8eZPGhEpK3jE/edit?tab=t.0#heading=h.lsbdweaff7ii).
 
 ## Goals
 
-[What is the **end-user need** which this project aims to address? Make this section short, and
-elaborate in the Use cases section.]
+- Allow developers to explicitly opt-in important or static inline scripts for caching.
+- Allow developers to opt-out dynamic or one-off inline scripts to avoid cache pollution.
 
 ## Non-goals
 
-[If there are "adjacent" goals which may appear to be in scope but aren't,
-enumerate them here. This section may be fleshed out as your design progresses and you encounter necessary technical and other trade-offs.]
+- Changing the execution timing or synchronous nature of inline scripts.
 
-## User research
+## Proposed Solution
 
-[If any user research has been conducted to inform your design choices,
-discuss the process and findings. User research should be more common than it is.]
+We propose adding a `cache-hints` attribute to the `<script>` tag.
 
-## Use cases
+### Attribute Values
 
-[Describe in detail what problems end-users are facing, which this project is trying to solve. A
-common mistake in this section is to take a web developer's or server operator's perspective, which
-makes reviewers worry that the proposal will violate [RFC 8890, The Internet is for End
-Users](https://www.rfc-editor.org/rfc/rfc8890).]
+- `eager`: Signals to the browser that this script is a good candidate for caching (e.g., it's large, static, and used across pages). The specific caching behavior and strategy are left to the browser's discretion.
+- `never`: Signals that the browser **must not** cache this script. In contrast to `eager`, this is a strict instruction to prevent caching of dynamic or one-off scripts.
 
-### Use case 1
+### WebIDL
 
-### Use case 2
+```idl
+[Exposed=Window]
+interface HTMLScriptElement : HTMLElement {
+  [HTMLConstructor] constructor();
 
-<!-- In your initial explainer, you shouldn't be attached or appear attached to any of the potential
-solutions you describe below this. -->
+  [CEReactions, Reflect] attribute DOMString type;
+  [CEReactions, ReflectURL] attribute USVString src;
+  [CEReactions, Reflect] attribute boolean noModule;
+  [CEReactions] attribute boolean async;
+  [CEReactions, Reflect] attribute boolean defer;
+  [SameObject, PutForwards=value, Reflect] readonly attribute DOMTokenList blocking;
+  [CEReactions] attribute DOMString? crossOrigin;
+  [CEReactions] attribute DOMString referrerPolicy;
+  [CEReactions, Reflect] attribute DOMString integrity;
+  [CEReactions] attribute DOMString fetchPriority;
++ [CEReactions, Reflect] attribute DOMString cacheHints;  // New attribute
 
-## [Potential Solution]
+  [CEReactions] attribute DOMString text;
 
-[For each related element of the proposed solution - be it an additional JS method, a new object, a new element, a new concept etc., create a section which briefly describes it.]
+  static boolean supports(DOMString type);
 
-```js
-// Provide example code - not IDL - demonstrating the design of the feature.
-
-// If this API can be used on its own to address a user need,
-// link it back to one of the scenarios in the goals section.
-
-// If you need to show how to get the feature set up
-// (initialized, or using permissions, etc.), include that too.
+  // also has obsolete members
+};
 ```
 
-[Where necessary, provide links to longer explanations of the relevant pre-existing concepts and API.
-If there is no suitable external documentation, you might like to provide supplementary information as an appendix in this document, and provide an internal link where appropriate.]
+### Examples
 
-[If this is already specced, link to the relevant section of the spec.]
+```html
+<!-- Cache large, static, cross-page scripts -->
+<script cache-hints="eager">
+  function commonLargeFunction() {
+    /* hundreds of lines */
+  }
+</script>
 
-[If spec work is in progress, link to the PR or draft of the spec.]
-
-[If you have more potential solutions in mind, add ## Potential Solution 2, 3, etc. sections.]
-
-### How this solution would solve the use cases
-
-[If there are a suite of interacting APIs, show how they work together to solve the use cases described.]
-
-#### Use case 1
-
-[Description of the end-user scenario]
-
-```js
-// Sample code demonstrating how to use these APIs to address that scenario.
+<!-- Don't cache scripts with dynamic data -->
+<script cache-hints="never">
+  var data_url = "data:image/...";
+  insertImage(data_url);
+</script>
 ```
 
-#### Use case 2
+## Alternatives Considered
 
-[etc.]
+### Automatic Detection by Browser
 
-## Detailed design discussion
+An alternative is for the browser to automatically determine which inline scripts to cache (e.g., based on size, execution frequency, or script complexity) without developer hints.
 
-### [Tricky design choice #1]
-
-[Talk through the tradeoffs in coming to the specific design point you want to make.]
-
-```js
-// Illustrated with example code.
-```
-
-[This may be an open question,
-in which case you should link to any active discussion threads.]
-
-### [Tricky design choice 2]
-
-[etc.]
-
-## Considered alternatives
-
-[This should include as many alternatives as you can,
-from high level architectural decisions down to alternative naming choices.]
-
-### [Alternative 1]
-
-[Describe an alternative which was considered,
-and why you decided against it.]
-
-### [Alternative 2]
-
-[etc.]
+However, the HTML specification guarantees that inline script compilation and execution are synchronous. This strict timing requirement makes it difficult for the browser to run advanced, potentially time-consuming analysis algorithms to decide on caching before execution without regressing performance. Developer hints via `cache-hints` provide a low-overhead way to guide the browser.
 
 ## Security and Privacy Considerations
 
-[Describe any interesting answers you give to the [Security and Privacy Self-Review
-Questionnaire](https://www.w3.org/TR/security-privacy-questionnaire/) and any interesting ways that
-your feature interacts with [Chromium's Web Platform Security
-Guidelines](https://chromium.googlesource.com/chromium/src/+/master/docs/security/web-platform-security-guidelines.md).]
-
-## Stakeholder Feedback / Opposition
-
-[Implementors and other stakeholders may already have publicly stated positions on this work. If you can, list them here with links to evidence as appropriate.]
-
-- [Implementor A] : Positive
-- [Stakeholder B] : No signals
-- [Implementor C] : Negative
-
-[If appropriate, explain the reasons given by other implementors for their concerns.]
-
-## References & acknowledgements
-
-[Your design will change and be informed by many people; acknowledge them in an ongoing way! It helps build community and, as we only get by through the contributions of many, is only fair.]
-
-[Unless you have a specific reason not to, these should be in alphabetical order.]
-
-Many thanks for valuable feedback and advice from:
-
-- [Person 1]
-- [Person 2]
-- [etc.]
+This feature does not expose new cross-origin data, as it only applies to scripts already embedded in the document. The cache keys will be properly partitioned to prevent cross-site tracking, consistent with standard browser caching policies.

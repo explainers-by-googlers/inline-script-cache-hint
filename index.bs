@@ -1,12 +1,12 @@
 <pre class='metadata'>
-Title: The TODO API
-Shortname: todo
+Title: Inline Script Cache Hint
+Shortname: inline-script-cache-hint
 Level: None
-Status: w3c/UD
-Repository: explainers-by-googlers/todo-your-repo-name
-URL: https://explainers-by-googlers.github.io/todo-your-repo-name
-Editor: TODO: Your Name, Google https://google.com, TODO@google.com
-Abstract: TODO: A short description of your spec, one or two sentences.
+Status: UD
+Repository: explainers-by-googlers/inline-script-cache-hint
+URL: https://explainers-by-googlers.github.io/inline-script-cache-hint
+Editor: Takashi Nakayama, Google https://google.com, tnak@chromium.org
+Abstract: This document proposes a `cache-hints` attribute for HTML `<script>` tags to provide hints to the browser about the caching behavior of inline scripts, complementing the Inline Script Cache feature in Chromium.
 Markup Shorthands: markdown yes, css no
 Complain About: accidental-2119 yes, missing-example-ids yes
 Assume Explicit For: yes
@@ -20,9 +20,4 @@ Include Can I Use Panels: yes
 Introduction {#intro}
 =====================
 
-For now, see the <a href=[REPOSITORYURL]>explainer</a>.
-
-See [https://garykac.github.io/procspec/](https://garykac.github.io/procspec/),
-[https://dlaliberte.github.io/bikeshed-intro/index.html](https://dlaliberte.github.io/bikeshed-intro/index.html),
-and [https://speced.github.io/bikeshed/](https://speced.github.io/bikeshed/) to get started on your
-specification.
+For now, see the <a href="https://github.com/explainers-by-googlers/inline-script-cache-hint">explainer</a>.
