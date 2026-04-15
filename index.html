@@ -2,13 +2,13 @@
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <title>The TODO API</title>
+  <title>Inline Script Cache Hint</title>
   <meta content="UD" name="w3c-status">
   <link href="https://www.w3.org/StyleSheets/TR/2021/W3C-UD" rel="stylesheet">
   <meta content="Bikeshed version 0ef803fdf, updated Tue Jan 6 11:59:39 2026 -0800" name="generator">
-  <link href="https://explainers-by-googlers.github.io/todo-your-repo-name" rel="canonical">
+  <link href="https://explainers-by-googlers.github.io/inline-script-cache-hint" rel="canonical">
   <link href="https://www.w3.org/2008/site/images/favicon.ico" rel="icon">
-  <meta content="88b2d9d645a25ea3ddfbb50bdc689cfc80823180" name="revision">
+  <meta content="57b0d235afaffc47b61f6085f094fa326d2450e5" name="revision">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
 <style>/* Boilerplate: style-autolinks */
@@ -552,19 +552,19 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
     <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72">
 </a>
 </p>
-   <h1 class="no-ref p-name" id="title">The TODO API</h1>
+   <h1 class="no-ref p-name" id="title">Inline Script Cache Hint</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#UD">Unofficial Proposal Draft</a>,
-    <time class="dt-updated" datetime="2026-04-10">10 April 2026</time></p>
+    <time class="dt-updated" datetime="2026-04-15">15 April 2026</time></p>
    <details open>
     <summary>More details about this document</summary>
     <div data-fill-with="spec-metadata">
      <dl>
       <dt>This version:
-      <dd><a class="u-url" href="https://explainers-by-googlers.github.io/todo-your-repo-name">https://explainers-by-googlers.github.io/todo-your-repo-name</a>
+      <dd><a class="u-url" href="https://explainers-by-googlers.github.io/inline-script-cache-hint">https://explainers-by-googlers.github.io/inline-script-cache-hint</a>
       <dt>Issue Tracking:
-      <dd><a href="https://github.com/explainers-by-googlers/todo-your-repo-name/issues/">GitHub</a>
+      <dd><a href="https://github.com/explainers-by-googlers/inline-script-cache-hint/issues/">GitHub</a>
       <dt class="editor">Editor:
-      <dd class="editor h-card p-author vcard"><a class="email fn p-name u-email" href="mailto:TODO@google.com">TODO: Your Name</a> (<a class="org p-org" href="https://google.com">Google</a>)
+      <dd class="editor h-card p-author vcard"><a class="email fn p-name u-email" href="mailto:tnak@chromium.org">Takashi Nakayama</a> (<a class="org p-org" href="https://google.com">Google</a>)
      </dl>
     </div>
    </details>
@@ -575,7 +575,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="heading no-num no-ref no-toc settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>TODO: A short description of your spec, one or two sentences.</p>
+   <p>Introduce cache-hint attribute on &lt;script> tag for inline script caching.</p>
   </div>
   <h2 class="heading no-num no-ref no-toc settled" id="sotd"><span class="content">Status of this document</span></h2>
   <div data-fill-with="status">
@@ -600,11 +600,7 @@ dd:not(:last-child) > .wpt-tests-block:not([open]):last-child {
   </nav>
   <main>
    <h2 class="heading settled" data-level="1" id="intro"><span class="secno">1. </span><span class="content">Introduction</span><a class="self-link" href="#intro"></a></h2>
-   <p>For now, see the <a href="https://github.com/explainers-by-googlers/todo-your-repo-name">explainer</a>.</p>
-   <p>See <a href="https://garykac.github.io/procspec/">https://garykac.github.io/procspec/</a>,
-<a href="https://dlaliberte.github.io/bikeshed-intro/index.html">https://dlaliberte.github.io/bikeshed-intro/index.html</a>,
-and <a href="https://speced.github.io/bikeshed/">https://speced.github.io/bikeshed/</a> to get started on your
-specification.</p>
+   <p>For now, see the <a href="https://github.com/explainers-by-googlers/inline-script-cache-hint">explainer</a>.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="heading no-num no-ref settled" id="w3c-conformance"><span class="content">Conformance</span><a class="self-link" href="#w3c-conformance"></a></h2>
