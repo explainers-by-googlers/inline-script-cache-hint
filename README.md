@@ -5,6 +5,7 @@ This proposal introduces a `cache-hint` attribute for HTML `<script>` tags, spec
 ## Proponents
 
 - [Takashi Nakayama](https://github.com/azaika) (tnak@chromium.org)
+- Google Chrome Loading team (loading-dev@chromium.org)
 
 ## Participate
 - https://github.com/explainers-by-googlers/inline-script-cache-hint/issues
