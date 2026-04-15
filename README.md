@@ -11,17 +11,11 @@ This proposal introduces a `cache-hint` attribute for HTML `<script>` tags, spec
 
 ## Introduction
 
-Inline scripts are widely used but traditionally less benefit from the browser's script cache than caching for resource scripts. This means large inline scripts must be parsed and compiled every time a page loads, which can negatively impact loading performance.
+While inline scripts benefit from transient in-memory caching in some engines like Chromium or WebKit, they generally lack the cross-navigation persistence available to URL-keyed external resources. Consequently, nontrivial inline scripts often undergo redundant parsing and compilation across sessions, negatively impacting loading performance.
 
-Chromium is implementing a new caching layer called **Inline Script Cache** to address this. To make this caching more effective and give developers control, we propose the `cache-hint` attribute.
+However, extending persistent caching to inline scripts via automated heuristics can introduce subtle runtime challenges. The HTML specification dictates that inline script processing must proceed synchronously, limiting the budget available for runtime analysis. Specifically, prototyping insights from Chromium revealed that performing speculative, synchronous cache lookups for every inline script can inadvertently impose measurable bottlenecks on the critical rendering path. (See Chromium's [Inline Script Cache Design Doc](https://docs.google.com/document/d/1pVFb79e5vkKJI7nZ15BXZFbNji_mB2Y8eZPGhEpK3jE/edit?tab=t.0#heading=h.lsbdweaff7ii) for details of the prototype.)
 
-## Background
-
-The compilation time of inline scripts can have a non-negligible impact on loading performance, especially on low-end devices or with large scripts. While external scripts benefit from HTTP caching and code caching keyed by URL, inline scripts are typically re-compiled on every execution.
-
-While browsers can try to automatically detect cacheable inline scripts based on heuristics, the HTML specification guarantees that inline script compilation and execution are **synchronous**. This strict timing requirement makes it difficult for browsers to run advanced, potentially slow analysis to decide on caching without risking performance regressions during the critical loading path. Furthermore, implementation experience in Chromium highlighted that performing cache lookups synchronously can itself become a bottleneck if applied to every inline script unconditionally.
-
-Developer hints via `cache-hint` provide a low-overhead way to guide browsers effectively, helping to avoid expensive lookups or unnecessary compilation. For details on the underlying mechanism being explored, see the [Inline Script Cache Design Doc](https://docs.google.com/document/d/1pVFb79e5vkKJI7nZ15BXZFbNji_mB2Y8eZPGhEpK3jE/edit?tab=t.0#heading=h.lsbdweaff7ii).
+To help browsers optimize inline script caching effectively and avoid the overhead of automatic detection, we propose the `cache-hint` attribute to give developers explicit, declarative control.
 
 ## Goals
 
@@ -92,4 +86,4 @@ Caches for resource scripts are already well-supported via HTTP caches and other
 
 ### How Wide is the Cache Scope?
 
-It depends on browser implementation, including whether cross-document within the same-origin is supported. However, browsers must not cache inline scripts cross-origins. As an example, the current implementation in Chromium isolates cache per top-level site and frame origin, same as HTTP cache partitioning.
+It depends on browser implementations, including whether cross-document within the same-origin is supported. However, browsers must not cache inline scripts cross-origins. As an example, the current implementation in Chromium isolates cache per top-level site and frame origin, mirroring HTTP cache partitioning.
