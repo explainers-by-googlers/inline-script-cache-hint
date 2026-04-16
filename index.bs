@@ -1,12 +1,12 @@
 <pre class='metadata'>
 Title: Inline Script Cache Hint
-Shortname: inline-script-cache-hint
+Shortname: inline-script-cachehint
 Level: None
 Status: w3c/UD
 Repository: explainers-by-googlers/inline-script-cache-hint
 URL: https://explainers-by-googlers.github.io/inline-script-cache-hint
 Editor: Takashi Nakayama, Google https://google.com, tnak@chromium.org
-Abstract: Introduce cache-hint attribute on &lt;script&gt; tag for inline script caching.
+Abstract: Introduce cachehint attribute on &lt;script&gt; tag for inline script caching.
 Markup Shorthands: markdown yes, css no
 Complain About: accidental-2119 yes, missing-example-ids yes
 Assume Explicit For: yes

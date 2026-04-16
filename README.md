@@ -8,7 +8,7 @@ This proposal introduces a `cachehint` attribute for HTML `<script>` tags, speci
 - Google Chrome Loading team (loading-dev@chromium.org)
 
 ## Participate
-- https://github.com/explainers-by-googlers/inline-script-cache-hint/issues
+- https://github.com/whatwg/html/issues/12378
 
 ## Introduction
 
