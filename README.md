@@ -1,6 +1,6 @@
-# Explainer for `cache-hint` on Inline Scripts
+# Explainer for `cachehint` for Inline Scripts
 
-This proposal introduces a `cache-hint` attribute for HTML `<script>` tags, specifically targeting inline scripts. It allows developers to provide hints to the browser about whether an inline script should be cached.
+This proposal introduces a `cachehint` attribute for HTML `<script>` tags, specifically targeting inline scripts. It allows developers to provide hints to the browser about whether an inline script should be cached.
 
 ## Proponents
 
@@ -16,7 +16,7 @@ While inline scripts benefit from transient in-memory caching in some engines li
 
 However, extending persistent caching to inline scripts via automated heuristics can introduce subtle runtime challenges. The HTML specification dictates that inline script processing must proceed synchronously, limiting the budget available for runtime analysis. Specifically, prototyping insights from Chromium revealed that performing speculative, synchronous cache lookups for every inline script can inadvertently impose measurable bottlenecks on the critical rendering path. (See Chromium's [Inline Script Cache Design Doc](https://docs.google.com/document/d/1pVFb79e5vkKJI7nZ15BXZFbNji_mB2Y8eZPGhEpK3jE/edit?tab=t.0#heading=h.lsbdweaff7ii) for details of the prototype.)
 
-To help browsers optimize inline script caching effectively and avoid the overhead of automatic detection, we propose the `cache-hint` attribute to give developers explicit, declarative control.
+To help browsers optimize inline script caching effectively and avoid the overhead of automatic detection, we propose the `cachehint` attribute to give developers explicit, declarative control.
 
 ## Goals
 
@@ -29,7 +29,7 @@ To help browsers optimize inline script caching effectively and avoid the overhe
 
 ## Proposed Solution
 
-We propose adding a `cache-hint` attribute to the `<script>` tag. This attribute only applies to inline scripts and has no effect on resource scripts (scripts with a `src` attribute).
+We propose adding a `cachehint` attribute to the `<script>` tag. This attribute only applies to inline scripts and has no effect on resource scripts (scripts with a `src` attribute).
 
 ### Attribute Values
 
@@ -51,28 +51,28 @@ partial interface HTMLScriptElement : HTMLElement {
 
 ```html
 <!-- Prefer caching large, static, cross-page scripts -->
-<script cache-hint="eager">
+<script cachehint="eager">
   function commonLargeFunction() {
     /* hundreds of lines */
   }
 </script>
 
 <!-- Same as no attribute: browsers determine caching automatically -->
-<script cache-hint="default">
+<script cachehint="default">
   function anotherFunction() {
     /* some lines */
   }
 </script>
 
 <!-- Don't cache scripts with dynamic data -->
-<script cache-hint="never">
+<script cachehint="never">
   var data_url = "data:image/...";
   insertImage(data_url);
 </script>
 
 <!-- These attributes have no effect on resource scripts -->
-<script cache-hint="eager" src="https://example.com/script.js"></script>
-<script cache-hint="never" src="https://example.com/script.js"></script>
+<script cachehint="eager" src="https://example.com/script.js"></script>
+<script cachehint="never" src="https://example.com/script.js"></script>
 ```
 
 ## Security and Privacy Considerations
@@ -81,7 +81,7 @@ Browsers must ensure that caching of inline scripts does not expose cross-origin
 
 ## FAQ
 
-### Why `cache-hint` is Not Applicable for Resource Scripts?
+### Why `cachehint` is Not Applicable for Resource Scripts?
 
 Caches for resource scripts are already well-supported via HTTP caches and other existing mechanisms. Adding cache hints for resource scripts would add unnecessary complexity to the platform.
 
